@@ -1,0 +1,31 @@
+{
+  "name": "otipi",
+  "version": "0.1.0",
+  "description": "Official Node.js SDK for Otipi — Email, SMS, and WhatsApp OTP API for Israeli apps (he, ar, ru, en).",
+  "type": "module",
+  "main": "./otipi.js",
+  "exports": "./otipi.js",
+  "types": "./otipi.d.ts",
+  "files": [
+    "otipi.js",
+    "otipi.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "otipi",
+    "israel",
+    "sms",
+    "whatsapp",
+    "otp",
+    "email",
+    "019",
+    "supabase",
+    "lovable",
+    "base44"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}

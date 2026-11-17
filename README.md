@@ -104,8 +104,8 @@ Supabase Auth can send its phone codes through Otipi with the **Send SMS Hook**.
 
 ## Examples
 
-- [`examples/nextjs-sms-login`](examples/nextjs-sms-login): Next.js App Router, two API routes and a login page.
-- [`examples/nextjs-supabase-phone-login`](examples/nextjs-supabase-phone-login): Next.js with Supabase Auth and the Otipi hook.
+- [`examples/nextjs-sms-login`](examples/nextjs-sms-login): Next.js App Router, two API routes and a login page. [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fplanetebatel-cloud%2Fotipi-node%2Ftree%2Fmain%2Fexamples%2Fnextjs-sms-login&env=OTIPI_KEY&envDescription=Free%20Otipi%20test%20key%20(sk_test_...)&envLink=https%3A%2F%2Fotipi.co.il%2Fsignup&project-name=otipi-sms-login)
+- [`examples/nextjs-supabase-phone-login`](examples/nextjs-supabase-phone-login): Next.js with Supabase Auth and the Otipi hook. [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fplanetebatel-cloud%2Fotipi-node%2Ftree%2Fmain%2Fexamples%2Fnextjs-supabase-phone-login&env=NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY&envDescription=Your%20Supabase%20project%20URL%20and%20anon%20key%20(Settings%20%3E%20API)&envLink=https%3A%2F%2Fsupabase.com%2Fdashboard&project-name=otipi-supabase-login)
 - [`examples/express`](examples/express): Express, two routes.
 
 ## For AI coding agents

@@ -1,198 +1,127 @@
-# Otipi Node.js SDK (`otipi`)
+# otipi: SMS login codes, SMS and email for Israeli apps
 
-Official zero-dependency Node.js client for **Otipi** (https://otipi.co.il): transactional Email, SMS, and WhatsApp login codes (OTP) for applications in Israel, with built-in templates in Hebrew (`he`), Arabic (`ar`), Russian (`ru`), and English (`en`).
-
----
-
-## English
-
-### Installation
+Official Node.js SDK for [Otipi](https://otipi.co.il), the SMS and email API for Israel (`+972`). Zero dependencies, TypeScript types included, Node 18+. Message templates in Hebrew, Arabic, Russian and English. Free test mode, no card.
 
 ```bash
 npm install otipi
 ```
 
-Requires Node.js 18 or newer. Use on the server side only (API routes, server actions, edge functions). Never expose your `sk_test_...` or `sk_live_...` key in the browser.
+## Quickstart: SMS login in 5 lines
 
-### Quick Start
+```js
+import { Otipi } from 'otipi';
+const otipi = new Otipi(process.env.OTIPI_KEY);              // sk_test_... or sk_live_...
+await otipi.otp.send({ to: '+972501234567', app: 'MyApp' }); // Otipi makes and sends the code
+const { valid } = await otipi.otp.verify({ to: '+972501234567', code: '482917' });
+if (valid) { /* the phone is proven: sign the user in */ }
+```
+
+Get a free key at [otipi.co.il/signup](https://otipi.co.il/signup) (about a minute, no card): **API keys > Create key**.
+
+## Rules that save you a debugging session
+
+- **Server only.** Keep `OTIPI_KEY` in an environment variable and call Otipi from API routes, server actions or edge functions. Never in client components, `NEXT_PUBLIC_*` or `VITE_*` variables. The API sends no CORS headers on purpose.
+- **Israeli mobiles only, E.164.** `+9725XXXXXXXX`. Users type `050-123-4567`: convert it first.
+- **Test and live keys.** `sk_test_` is free: nothing reaches strangers, and `otp.send` returns the code in `test_code` so automated tests can finish the flow. `sk_live_` sends to anyone (needs an active subscription).
+- **Real SMS in test mode.** Confirm your own number once and test messages to it really arrive (5 free test SMS per account):
+
+```js
+await otipi.testRecipients.add({ to: '+972501234567' });                    // you get an SMS with a code
+await otipi.testRecipients.verify({ to: '+972501234567', code: '123456' }); // now it is confirmed
+```
+
+  The same is in the dashboard: **API keys > Your numbers for tests**. Every message answer says `test_delivery: "real"` or `"sandbox"`.
+
+```js
+// 050-123-4567 -> +972501234567, or null
+function toIsraeliMobile(input) {
+  const d = String(input ?? '').replace(/[\s\-().]/g, '');
+  const e164 = d.startsWith('+') ? d : d.startsWith('0') ? `+972${d.slice(1)}` : `+${d}`;
+  return /^\+9725\d{8}$/.test(e164) ? e164 : null;
+}
+```
+
+## Errors
+
+Every failed call throws `OtipiError` with `status` (HTTP) and a stable `code`:
 
 ```js
 import { Otipi, OtipiError } from 'otipi';
 
-const otipi = new Otipi(process.env.OTIPI_KEY);
-
-// 1. Send a login code (WhatsApp first with automatic fallback to SMS)
-const otp = await otipi.otp.send({
-  to: '+972501234567',
-  app: 'MyApp',
-  channel: 'auto', // 'sms' | 'whatsapp' | 'email' | 'auto'
-  language: 'he',  // 'he' | 'ar' | 'ru' | 'en'
-});
-
-// 2. Verify the code entered by the user
-const { valid, reason } = await otipi.otp.verify({
-  to: '+972501234567',
-  code: '482917',
-});
-
-if (valid) {
-  // Sign the user in
+try {
+  await otipi.otp.send({ to, app: 'MyApp' });
+} catch (err) {
+  if (err instanceof OtipiError) {
+    // err.code: invalid_recipient | too_many_codes | rate_limited | free_test_sms_used | unauthorized | ...
+    return Response.json({ error: err.message, code: err.code }, { status: err.status === 429 ? 429 : 400 });
+  }
+  throw err;
 }
-
-// 3. Send a transactional email
-const emailMsg = await otipi.send({
-  channel: 'email',
-  from: 'MyApp <hello@myapp.co.il>',
-  to: 'dana@example.com',
-  subject: 'Order confirmed',
-  template: 'order-confirmed',
-  language: 'he',
-  variables: { name: 'Dana', order: '1042', app: 'MyApp' },
-});
-
-// 4. Check message status
-const status = await otipi.messages.get(emailMsg.id);
 ```
 
-### Supabase Auth Integration (Send SMS Hook)
+| `code` | What happened | What to do |
+| --- | --- | --- |
+| `unauthorized` | Key missing, wrong or revoked | Check `OTIPI_KEY` |
+| `invalid_recipient` | Not an Israeli mobile number | Convert to `+9725XXXXXXXX` |
+| `too_many_codes` | 5 codes an hour to one number | Ask the user to wait |
+| `rate_limited` | Too many requests | Retry after `Retry-After` |
+| `free_test_sms_used` | The 5 free test SMS are used | Subscribe, use a `sk_live_` key |
+| `identity_not_verified`, `sender_required` | Live SMS needs a one-time ID check and an approved sender name | Dashboard > **SMS** |
+| `domain_not_verified` | Live email from an unverified domain | Dashboard > **Domains** |
 
-You can connect Supabase phone authentication directly to Otipi without writing custom Edge Functions:
+`otp.verify` does not throw for a wrong code: it returns `{ valid: false, reason: 'wrong_code' | 'expired_or_missing' | 'too_many_attempts' }`.
 
-1. Open your Supabase project dashboard and go to `Auth -> Hooks -> Send SMS Hook`.
-2. Choose **HTTP Request**.
-3. Set the URL to:
-   ```text
-   https://otipi.co.il/v1/integrations/supabase-sms-hook?channel=auto
-   ```
-4. Add the HTTP header `Authorization: Bearer sk_live_...` (or configure your Standard Webhooks secret).
-
-Otipi will accept `{ user: { phone }, sms: { otp } }` from Supabase, send the code via WhatsApp with automatic fallback to SMS, and return `200 {}`.
-
-### One-Click Prompt for Lovable, Cursor, and Base44
-
-Copy and paste this prompt into **Lovable** or **Cursor**:
-
-```text
-Add Otipi to this project for phone login (OTP via WhatsApp/SMS) and transactional email in Israel.
-
-Rules:
-- Call Otipi from server code only. Read the API key from process.env.OTIPI_KEY (Authorization: Bearer <key>).
-- Base URL: https://otipi.co.il/v1
-- Phone numbers are Israeli mobile numbers (+9725XXXXXXXX).
-
-Phone login in two calls:
-1. POST https://otipi.co.il/v1/otp/send
-   Body: { "to": "+972501234567", "app": "MyApp", "channel": "auto", "language": "he" }
-   Returns 201: { "id", "status": "pending", "expires_at", "test_code" }
-2. POST https://otipi.co.il/v1/otp/verify
-   Body: { "to": "+972501234567", "code": "123456" }
-   Returns 200: { "valid": true } or { "valid": false, "reason": "wrong_code" | "expired_or_missing" | "too_many_attempts" }
-
-Transactional email / SMS:
-- POST https://otipi.co.il/v1/messages
-  Body: { "channel": "email" | "sms", "to": "...", "from": "MyApp <hello@myapp.co.il>", "subject": "...", "text": "..." }
-
-Full reference: https://otipi.co.il/llms-full.txt
-OpenAPI 3.1 spec (for Base44): https://otipi.co.il/openapi.json
-```
-
-For **Base44**, add an external API integration from an OpenAPI specification and point it to `https://otipi.co.il/openapi.json` with your `Bearer sk_live_...` key.
-
----
-
-## Русский
-
-### Установка
-
-```bash
-npm install otipi
-```
-
-Требуется Node.js 18 или новее. Используйте пакет только на сервере (API-маршруты, серверные экшены, фоновые функции). Никогда не передавайте секретный ключ `sk_test_...` или `sk_live_...` в браузер.
-
-### Быстрый старт
+## API
 
 ```js
-import { Otipi, OtipiError } from 'otipi';
+const otipi = new Otipi(apiKey, { baseUrl?, timeoutMs? });
 
-const otipi = new Otipi(process.env.OTIPI_KEY);
+otipi.otp.send({ to, app, channel?, language?, length?, ttlMinutes? }); // channel: sms (default) | whatsapp | email | auto
+otipi.otp.verify({ to, code });
 
-// 1. Отправка кода входа (сначала WhatsApp, при сбое провайдера автоматический переход на SMS)
-const otp = await otipi.otp.send({
-  to: '+972501234567',
-  app: 'MyApp',
-  channel: 'auto', // 'sms' | 'whatsapp' | 'email' | 'auto'
-  language: 'ru',  // 'he' | 'ar' | 'ru' | 'en'
-});
+otipi.send({ channel: 'sms', to, text });                              // any SMS
+otipi.send({ channel: 'email', to, from, subject, html });              // any email (from: a verified domain)
+otipi.send({ channel: 'sms', to, template: 'login-code', language: 'he', variables: { code, app, minutes } });
+otipi.send(message, { idempotencyKey });                               // never sends twice
 
-// 2. Проверка кода, который ввёл пользователь
-const { valid, reason } = await otipi.otp.verify({
-  to: '+972501234567',
-  code: '482917',
-});
+otipi.messages.get(id);                                                 // status and events
+otipi.messages.list({ limit, channel, status });
 
-if (valid) {
-  // Авторизуем пользователя
-}
+otipi.testRecipients.add({ to });                                       // test keys only
+otipi.testRecipients.verify({ to, code });
+otipi.testRecipients.list();                                            // { data, free_sms: { total, used, left } }
 
-// 3. Отправка транзакционного письма
-const emailMsg = await otipi.send({
-  channel: 'email',
-  from: 'MyApp <hello@myapp.co.il>',
-  to: 'dana@example.com',
-  subject: 'Заказ подтверждён',
-  template: 'order-confirmed',
-  language: 'ru',
-  variables: { name: 'Дана', order: '1042', app: 'MyApp' },
-});
-
-// 4. Проверка статуса доставки и истории событий
-const status = await otipi.messages.get(emailMsg.id);
+Otipi.verifyWebhook(rawBody, req.headers['otipi-signature'], secret);   // true when the webhook is really from Otipi
 ```
 
-### Подключение к Supabase Auth (Send SMS Hook)
+Ready-made templates: `login-code`, `order-confirmed`, `receipt`, each in `he` (default), `ar`, `ru`, `en`.
 
-Вы можете подключить вход по номеру телефона в Supabase напрямую к Otipi без написания собственных Edge Functions:
+## Supabase phone login
 
-1. В панели управления проектом Supabase откройте раздел `Auth -> Hooks -> Send SMS Hook`.
-2. Выберите тип хука **HTTP Request**.
-3. Вставьте URL:
-   ```text
-   https://otipi.co.il/v1/integrations/supabase-sms-hook?channel=auto
-   ```
-4. Укажите заголовок `Authorization: Bearer sk_live_...` (или секрет Standard Webhooks).
+Supabase Auth can send its phone codes through Otipi with the **Send SMS Hook**. Supabase HTTP hooks cannot carry custom headers, so the Otipi key lives in a small edge function: [otipi-supabase](https://github.com/planetebatel-cloud/otipi-supabase) (deploy, paste the hook URL and secret, done). Client code stays `supabase.auth.signInWithOtp({ phone })` and `supabase.auth.verifyOtp({ phone, token, type: 'sms' })`.
 
-Otipi примет стандартный вебхук `{ user: { phone }, sms: { otp } }`, отправит код через WhatsApp с автоматическим резервом на SMS и вернёт `200 {}`.
+## Examples
 
-### Готовый промпт для Lovable, Cursor и Base44
+- [`examples/nextjs-sms-login`](examples/nextjs-sms-login): Next.js App Router, two API routes and a login page.
+- [`examples/nextjs-supabase-phone-login`](examples/nextjs-supabase-phone-login): Next.js with Supabase Auth and the Otipi hook.
+- [`examples/express`](examples/express): Express, two routes.
 
-Скопируйте и вставьте этот системный промпт в **Lovable** или **Cursor**:
+## For AI coding agents
 
-```text
-Подключи Otipi к проекту для входа по телефону (OTP через WhatsApp и SMS) и отправки писем в Израиле.
+- **Claude Code skill**:
+  ```bash
+  mkdir -p .claude/skills/otipi && curl -fsSL https://raw.githubusercontent.com/planetebatel-cloud/otipi-node/main/agents/claude-code/otipi/SKILL.md -o .claude/skills/otipi/SKILL.md
+  ```
+- **Cursor rules**:
+  ```bash
+  mkdir -p .cursor/rules && curl -fsSL https://raw.githubusercontent.com/planetebatel-cloud/otipi-node/main/agents/cursor/otipi.mdc -o .cursor/rules/otipi.mdc
+  ```
+- **MCP server** (send a test code, check delivery, get a snippet from inside the agent): `claude mcp add otipi --env OTIPI_KEY=sk_test_... -- npx -y otipi-mcp`
+- Docs as plain text: [otipi.co.il/llms-full.txt](https://otipi.co.il/llms-full.txt) · OpenAPI: [otipi.co.il/openapi.json](https://otipi.co.il/openapi.json)
 
-Правила:
-- Вызывай API Otipi только на сервере. Ключ бери из переменной окружения OTIPI_KEY (заголовок Authorization: Bearer <key>).
-- Базовый адрес: https://otipi.co.il/v1
-- Номера телефонов: израильские мобильные номера в формате +9725XXXXXXXX.
+## Links
 
-Вход по телефону в два вызова:
-1. POST https://otipi.co.il/v1/otp/send
-   Тело: { "to": "+972501234567", "app": "MyApp", "channel": "auto", "language": "he" }
-   Ответ 201: { "id", "status": "pending", "expires_at", "test_code" }
-2. POST https://otipi.co.il/v1/otp/verify
-   Тело: { "to": "+972501234567", "code": "123456" }
-   Ответ 200: { "valid": true } или { "valid": false, "reason": "wrong_code" | "expired_or_missing" | "too_many_attempts" }
-
-Отправка писем и SMS:
-- POST https://otipi.co.il/v1/messages
-  Тело: { "channel": "email" | "sms", "to": "...", "from": "MyApp <hello@myapp.co.il>", "subject": "...", "text": "..." }
-
-Полная документация для ИИ: https://otipi.co.il/llms-full.txt
-Спецификация OpenAPI 3.1 (для Base44): https://otipi.co.il/openapi.json
-```
-
-Для **Base44** добавьте внешнюю интеграцию по спецификации OpenAPI и укажите адрес `https://otipi.co.il/openapi.json` с заголовком `Authorization: Bearer sk_live_...`.
+[Documentation](https://otipi.co.il/en/docs) · [Dashboard](https://otipi.co.il/app) · [Supabase hook](https://github.com/planetebatel-cloud/otipi-supabase) · [MCP server](https://github.com/planetebatel-cloud/otipi-mcp)
 
 ## License
 

@@ -1,0 +1,17 @@
+---
+description: Otipi SMS login (OTP), SMS and email for Israeli (+972) users. Apply when adding phone login, OTP, 2FA, SMS or Supabase phone auth for Israel.
+globs:
+alwaysApply: false
+---
+
+# Otipi (SMS / OTP / email API for Israel)
+
+- SDK: `npm install otipi`. `import { Otipi, OtipiError } from 'otipi'`; `const otipi = new Otipi(process.env.OTIPI_KEY!)`.
+- Key: free `sk_test_` key at https://otipi.co.il/signup. Server environment only (`.env.local`). Never in client components, `NEXT_PUBLIC_*`, `VITE_*` or git.
+- Login is two server calls: `await otipi.otp.send({ to, app: 'MyApp' })`, then `const { valid, reason } = await otipi.otp.verify({ to, code })`. Do not generate or store codes yourself.
+- Phones: Israeli mobiles in E.164 `+9725XXXXXXXX`. Normalize user input (`050-123-4567`) on the server: strip spaces/dashes, `0` prefix -> `+972`, check `/^\+9725\d{8}$/`.
+- Next.js App Router: `lib/otipi.ts` with `import 'server-only'`; routes `app/api/otp/send/route.ts` and `app/api/otp/verify/route.ts`; a `'use client'` page that calls them. Example: https://github.com/planetebatel-cloud/otipi-node/tree/main/examples/nextjs-sms-login
+- Errors: catch `OtipiError` and use `err.code`: `invalid_recipient` (400), `too_many_codes` / `rate_limited` (429), `free_test_sms_used`, `unauthorized`. `otp.verify` returns `{ valid: false, reason }` instead of throwing for a wrong code.
+- Test mode: `sk_test_` messages reach nobody except the owner's numbers confirmed in the dashboard (**API keys > Your numbers for tests**) or with `otipi.testRecipients.add({ to })` + `.verify({ to, code })`; 5 free test SMS. `otp.send` returns `test_code` in test mode. Answers carry `test_delivery: "real" | "sandbox"`. Never show `test_code` to end users.
+- Supabase phone auth: do not add an Authorization header to the hook (Supabase hooks cannot send headers). Deploy the edge function from https://github.com/planetebatel-cloud/otipi-supabase with `supabase functions deploy otipi-sms-hook --no-verify-jwt`, set `OTIPI_KEY` and `SEND_SMS_HOOK_SECRETS` (the `v1,whsec_...` from Authentication > Hooks) with `supabase secrets set`, then use `supabase.auth.signInWithOtp({ phone })` and `supabase.auth.verifyOtp({ phone, token, type: 'sms' })`.
+- Docs: https://otipi.co.il/en/docs · https://otipi.co.il/llms-full.txt · https://otipi.co.il/openapi.json

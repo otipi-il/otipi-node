@@ -47,13 +47,13 @@ Full example: https://github.com/planetebatel-cloud/otipi-node/tree/main/example
 
 ## Supabase phone auth
 
-Supabase makes and checks the code; Otipi only delivers it through the Supabase **Send SMS Hook**. Supabase HTTP hooks cannot send custom headers, so do NOT tell the user to add an Authorization header to the hook URL. Use the edge function:
+Supabase makes and checks the code; Otipi only delivers it, through the Supabase **Send SMS Hook** (and the **Send Email Hook** for all auth emails). No code and no edge function are needed:
 
-1. Copy `supabase/functions/otipi-sms-hook/{index.ts,handler.ts}` from https://github.com/planetebatel-cloud/otipi-supabase
-2. `supabase functions deploy otipi-sms-hook --no-verify-jwt`
-3. Dashboard: **Authentication > Hooks > Send SMS hook**, HTTPS, URL `https://<project-ref>.supabase.co/functions/v1/otipi-sms-hook`, **Generate secret**.
-4. `supabase secrets set OTIPI_KEY=sk_test_... SEND_SMS_HOOK_SECRETS='v1,whsec_...' OTIPI_APP_NAME='MyApp'`
-5. Client: `supabase.auth.signInWithOtp({ phone: '+972501234567' })`, then `supabase.auth.verifyOtp({ phone, token, type: 'sms' })`.
+1. Otipi dashboard, page **Connect**, tab "Supabase, SMS": copy the hook address (`https://otipi.co.il/v1/integrations/supabase/sms/<token>`) and its secret (`v1,whsec_...`).
+2. Supabase Dashboard: **Authentication > Hooks > Send SMS hook**, HTTPS, paste the address and the secret. Do NOT add an Authorization header: Otipi checks the Standard Webhooks signature.
+3. For emails: the "Supabase, email" tab, a Send Email hook the same way, and the Supabase project URL written on the Connect page.
+4. Client: `supabase.auth.signInWithOtp({ phone: '+972501234567' })`, then `supabase.auth.verifyOtp({ phone, token, type: 'sms' })`.
+5. The hook starts in test mode (real SMS only to the owner's confirmed phone); switch it to live on the Connect page once a plan is active.
 
 ## Trying it from the agent
 

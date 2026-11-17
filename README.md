@@ -100,7 +100,7 @@ Ready-made templates: `login-code`, `order-confirmed`, `receipt`, each in `he` (
 
 ## Supabase phone login
 
-Supabase Auth can send its phone codes through Otipi with the **Send SMS Hook**. Supabase HTTP hooks cannot carry custom headers, so the Otipi key lives in a small edge function: [otipi-supabase](https://github.com/planetebatel-cloud/otipi-supabase) (deploy, paste the hook URL and secret, done). Client code stays `supabase.auth.signInWithOtp({ phone })` and `supabase.auth.verifyOtp({ phone, token, type: 'sms' })`.
+Supabase Auth sends its phone codes (Send SMS Hook) and all its auth emails (Send Email Hook) through Otipi, with no code on your side. In the Otipi dashboard, page **Connect**, copy the hook address and secret of your account; in Supabase, **Authentication > Hooks**, add an HTTPS hook with them. Otipi checks the Standard Webhooks signature, so no Authorization header is needed. Client code stays `supabase.auth.signInWithOtp({ phone })` and `supabase.auth.verifyOtp({ phone, token, type: 'sms' })`.
 
 ## Examples
 
@@ -140,7 +140,7 @@ A free test key comes in one click after sign-up: https://otipi.co.il/signup. Th
 
 ## Links
 
-[Documentation](https://otipi.co.il/en/docs) · [Dashboard](https://otipi.co.il/app) · [Supabase hook](https://github.com/planetebatel-cloud/otipi-supabase) · [MCP server](https://github.com/planetebatel-cloud/otipi-mcp)
+[Documentation](https://otipi.co.il/en/docs) · [Dashboard](https://otipi.co.il/app) · [MCP server](https://github.com/planetebatel-cloud/otipi-mcp)
 
 ## License
 

@@ -1,0 +1,15 @@
+{
+  "name": "otipi",
+  "description": "Otipi: SMS, email and OTP login codes for Israeli apps",
+  "owner": {
+    "name": "Otipi",
+    "url": "https://otipi.co.il"
+  },
+  "plugins": [
+    {
+      "name": "otipi",
+      "source": "./agents/claude-code",
+      "description": "SMS login (OTP), SMS and email for Israeli (+972) users with the Otipi API: a skill with the rules and the Otipi MCP server for test codes."
+    }
+  ]
+}

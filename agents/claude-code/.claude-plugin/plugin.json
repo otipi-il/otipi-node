@@ -1,0 +1,26 @@
+{
+  "name": "otipi",
+  "version": "0.2.0",
+  "description": "SMS login (OTP), SMS and email for Israeli (+972) users with the Otipi API: a skill with the rules and the Otipi MCP server for test codes.",
+  "homepage": "https://otipi.co.il",
+  "repository": "https://github.com/planetebatel-cloud/otipi-node",
+  "license": "MIT",
+  "keywords": [
+    "sms",
+    "otp",
+    "israel",
+    "2fa",
+    "supabase",
+    "nextjs",
+    "mcp"
+  ],
+  "userConfig": {
+    "otipi_key": {
+      "type": "string",
+      "title": "Otipi API key",
+      "description": "A free sk_test_ key from https://otipi.co.il/signup (dashboard: Get my test key).",
+      "sensitive": true,
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "otipi": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "otipi-mcp"
+      ],
+      "env": {
+        "OTIPI_KEY": "${user_config.otipi_key}"
+      }
+    }
+  }
+}

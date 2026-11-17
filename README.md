@@ -110,16 +110,30 @@ Supabase Auth can send its phone codes through Otipi with the **Send SMS Hook**.
 
 ## For AI coding agents
 
-- **Claude Code skill**:
+A free test key comes in one click after sign-up: https://otipi.co.il/signup. The dashboard shows every command below with your key already in it.
+
+- **Claude Code plugin** (skill with the rules + MCP server; asks for the key on install):
   ```bash
-  mkdir -p .claude/skills/otipi && curl -fsSL https://raw.githubusercontent.com/planetebatel-cloud/otipi-node/main/agents/claude-code/otipi/SKILL.md -o .claude/skills/otipi/SKILL.md
+  claude plugin marketplace add planetebatel-cloud/otipi-node
+  claude plugin install otipi@otipi
+  ```
+- **MCP server only**, any MCP client (`npx -y otipi-mcp`, key in `OTIPI_KEY`):
+  ```bash
+  claude mcp add otipi -e OTIPI_KEY=sk_test_... -- npx -y otipi-mcp
+  ```
+  Cursor: [Add to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=otipi&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIm90aXBpLW1jcCJdLCJlbnYiOnsiT1RJUElfS0VZIjoic2tfdGVzdF95b3VyX2tleSJ9fQ==) · VS Code: [Install in VS Code](vscode:mcp/install?%7B%22name%22%3A%22otipi%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22otipi-mcp%22%5D%2C%22env%22%3A%7B%22OTIPI_KEY%22%3A%22sk_test_your_key%22%7D%7D) (then put your key in place of `sk_test_your_key`). Or add to `.cursor/mcp.json`:
+  ```json
+  { "mcpServers": { "otipi": { "command": "npx", "args": ["-y", "otipi-mcp"], "env": { "OTIPI_KEY": "sk_test_..." } } } }
+  ```
+- **Skill alone** (Claude Code):
+  ```bash
+  mkdir -p .claude/skills/otipi && curl -fsSL https://raw.githubusercontent.com/planetebatel-cloud/otipi-node/main/agents/claude-code/skills/otipi/SKILL.md -o .claude/skills/otipi/SKILL.md
   ```
 - **Cursor rules**:
   ```bash
   mkdir -p .cursor/rules && curl -fsSL https://raw.githubusercontent.com/planetebatel-cloud/otipi-node/main/agents/cursor/otipi.mdc -o .cursor/rules/otipi.mdc
   ```
-- **MCP server** (send a test code, check delivery, get a snippet from inside the agent): `claude mcp add otipi --env OTIPI_KEY=sk_test_... -- npx -y otipi-mcp`
-- Docs as plain text: [otipi.co.il/llms-full.txt](https://otipi.co.il/llms-full.txt) · OpenAPI: [otipi.co.il/openapi.json](https://otipi.co.il/openapi.json)
+- Docs as plain text: [otipi.co.il/llms.txt](https://otipi.co.il/llms.txt) · [llms-full.txt](https://otipi.co.il/llms-full.txt) · OpenAPI: [otipi.co.il/openapi.json](https://otipi.co.il/openapi.json) · Up-to-date docs in your agent: [Context7](https://context7.com)
 
 ## Links
 

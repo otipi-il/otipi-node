@@ -1,0 +1,19 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "Otipi Node.js SDK",
+  "description": "Zero-dependency Node.js SDK for Otipi, the SMS, email and OTP login-code API for Israeli (+972) apps, with a free test mode.",
+  "folders": [],
+  "excludeFolders": [
+    "node_modules"
+  ],
+  "excludeFiles": [
+    "LICENSE"
+  ],
+  "rules": [
+    "Phone numbers must be Israeli mobiles in E.164 (+9725XXXXXXXX). Convert 05X-XXX-XXXX before calling otipi.otp.send.",
+    "Keep OTIPI_KEY on the server only (env var, API routes, server actions). Never use it in client components or NEXT_PUBLIC_/VITE_ variables.",
+    "sk_test_ keys are free: messages only reach the owner's confirmed numbers (otipi.testRecipients.add/verify, 5 free SMS); others are logged and test_code is returned. sk_live_ sends to anyone.",
+    "Login flow: otipi.otp.send({ to, app }) then otipi.otp.verify({ to, code }); sign the user in only when valid is true.",
+    "Errors throw OtipiError with .status and stable .code (invalid_recipient, too_many_codes, free_test_sms_used, rate_limited); map them to user messages."
+  ]
+}

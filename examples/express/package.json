@@ -1,0 +1,7 @@
+{
+  "name": "otipi-example-express",
+  "private": true,
+  "type": "module",
+  "scripts": { "start": "node server.js" },
+  "dependencies": { "express": "^5.1.0", "otipi": ">=0.1.0" }
+}

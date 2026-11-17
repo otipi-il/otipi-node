@@ -50,6 +50,8 @@ export interface OtipiMessage {
   template: string | null;
   status: OtipiMessageStatus;
   mode: OtipiMode;
+  /** Test mode only: "real" when it went to one of your confirmed numbers or addresses, "sandbox" when it was only logged. */
+  test_delivery?: 'sandbox' | 'real';
   segments: number | null;
   error: string | null;
   created_at: string;
@@ -119,6 +121,22 @@ export interface OtipiOtpVerifyResult {
   reason?: OtipiOtpInvalidReason;
 }
 
+export interface OtipiTestRecipient {
+  id: string;
+  channel: 'sms' | 'email';
+  to: string;
+  status: 'pending' | 'confirmed';
+  /** Present in the answer to add(): false when the recipient was already confirmed. */
+  code_sent?: boolean;
+  created_at: string;
+  confirmed_at: string | null;
+}
+
+export interface OtipiTestRecipientList {
+  data: OtipiTestRecipient[];
+  free_sms: { total: number; used: number; left: number };
+}
+
 export interface OtipiVerifyWebhookOptions {
   /** Maximum age of the webhook signature in seconds (default: 300). */
   toleranceSeconds?: number;
@@ -133,6 +151,13 @@ export declare class Otipi {
   readonly otp: {
     send(input: OtipiOtpSendInput): Promise<OtipiOtp>;
     verify(input: OtipiOtpVerifyInput): Promise<OtipiOtpVerifyResult>;
+  };
+
+  /** Test mode (sk_test_ keys only): confirm your own number or email so test messages to it really arrive. */
+  readonly testRecipients: {
+    list(): Promise<OtipiTestRecipientList>;
+    add(input: { to: string; language?: OtipiLanguage }): Promise<OtipiTestRecipient>;
+    verify(input: { to: string; code: string }): Promise<OtipiTestRecipient>;
   };
 
   constructor(apiKey: string, options?: OtipiOptions);

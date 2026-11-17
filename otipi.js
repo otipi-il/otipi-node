@@ -83,6 +83,20 @@ export class Otipi {
       /** Checks what the person typed: { valid: true } or { valid: false, reason }. */
       verify: ({ to, code } = {}) => this.#call('POST', '/v1/otp/verify', { body: { to, code } }),
     };
+
+    /**
+     * Test mode (sk_test_ keys only). Test messages reach nobody, except your own
+     * numbers and addresses confirmed here with a code: those really arrive
+     * (5 free test SMS per account). add() sends the code, verify() checks it.
+     */
+    this.testRecipients = {
+      /** { data: [{ id, channel, to, status: 'pending' | 'confirmed' }], free_sms: { total, used, left } } */
+      list: () => this.#call('GET', '/v1/test-recipients'),
+      /** Sends a 6-digit code to your Israeli mobile number (+9725XXXXXXXX) or email. */
+      add: ({ to, language } = {}) => this.#call('POST', '/v1/test-recipients', { body: { to, ...(language ? { language } : {}) } }),
+      /** Confirms it with the code you received. */
+      verify: ({ to, code } = {}) => this.#call('POST', '/v1/test-recipients/verify', { body: { to, code } }),
+    };
   }
 
   /**

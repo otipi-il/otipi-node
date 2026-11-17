@@ -55,6 +55,10 @@ Supabase makes and checks the code; Otipi only delivers it through the Supabase 
 4. `supabase secrets set OTIPI_KEY=sk_test_... SEND_SMS_HOOK_SECRETS='v1,whsec_...' OTIPI_APP_NAME='MyApp'`
 5. Client: `supabase.auth.signInWithOtp({ phone: '+972501234567' })`, then `supabase.auth.verifyOtp({ phone, token, type: 'sms' })`.
 
+## Trying it from the agent
+
+The Otipi MCP server (`https://otipi.co.il/mcp`, or the `otipi` plugin) lets you send a test code yourself with `send_test_otp`, confirm the user's own number with `add_test_recipient` + `confirm_test_recipient`, and fetch ready code with `get_integration_snippet`. If it is not connected, the user can add it: `claude mcp add --transport http otipi https://otipi.co.il/mcp --header "Authorization: Bearer sk_test_..."`.
+
 ## Test mode (explain this to the user)
 
 - `sk_test_` keys are free. Messages to strangers are only logged, never delivered, and `otp.send` returns `test_code` so the flow can be tested end to end.

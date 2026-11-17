@@ -117,14 +117,17 @@ A free test key comes in one click after sign-up: https://otipi.co.il/signup. Th
   claude plugin marketplace add planetebatel-cloud/otipi-node
   claude plugin install otipi@otipi
   ```
-- **MCP server only**, any MCP client (`npx -y otipi-mcp`, key in `OTIPI_KEY`):
-  ```bash
-  claude mcp add otipi -e OTIPI_KEY=sk_test_... -- npx -y otipi-mcp
-  ```
-  Cursor: [Add to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=otipi&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIm90aXBpLW1jcCJdLCJlbnYiOnsiT1RJUElfS0VZIjoic2tfdGVzdF95b3VyX2tleSJ9fQ==) · VS Code: [Install in VS Code](vscode:mcp/install?%7B%22name%22%3A%22otipi%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22otipi-mcp%22%5D%2C%22env%22%3A%7B%22OTIPI_KEY%22%3A%22sk_test_your_key%22%7D%7D) (then put your key in place of `sk_test_your_key`). Or add to `.cursor/mcp.json`:
-  ```json
-  { "mcpServers": { "otipi": { "command": "npx", "args": ["-y", "otipi-mcp"], "env": { "OTIPI_KEY": "sk_test_..." } } } }
-  ```
+- **Remote MCP server**, nothing to install: `https://otipi.co.il/mcp`.
+  - Claude.ai, ChatGPT: add a custom connector with this address and sign in to Otipi.
+  - Claude Code:
+    ```bash
+    claude mcp add --transport http otipi https://otipi.co.il/mcp --header "Authorization: Bearer sk_test_..."
+    ```
+  - Cursor (`.cursor/mcp.json`):
+    ```json
+    { "mcpServers": { "otipi": { "url": "https://otipi.co.il/mcp", "headers": { "Authorization": "Bearer sk_test_..." } } } }
+    ```
+  - The dashboard has "Add to Cursor" and "Install in VS Code" buttons with your key in them. A local stdio server is on npm: `npx -y otipi-mcp`.
 - **Skill alone** (Claude Code):
   ```bash
   mkdir -p .claude/skills/otipi && curl -fsSL https://raw.githubusercontent.com/planetebatel-cloud/otipi-node/main/agents/claude-code/skills/otipi/SKILL.md -o .claude/skills/otipi/SKILL.md

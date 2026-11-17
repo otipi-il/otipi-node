@@ -1,13 +1,10 @@
 {
   "mcpServers": {
     "otipi": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "otipi-mcp"
-      ],
-      "env": {
-        "OTIPI_KEY": "${user_config.otipi_key}"
+      "type": "http",
+      "url": "https://otipi.co.il/mcp",
+      "headers": {
+        "Authorization": "Bearer ${user_config.otipi_key}"
       }
     }
   }

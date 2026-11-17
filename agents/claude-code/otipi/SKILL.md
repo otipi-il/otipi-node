@@ -24,7 +24,7 @@ const { valid, reason } = await otipi.otp.verify({ to: '+972501234567', code });
 // valid === true -> create the session. reason: wrong_code | expired_or_missing | too_many_attempts
 ```
 
-Do not generate, store or compare codes yourself: Otipi does it (5 attempts, 5 minutes by default, `ttlMinutes` 1 to 30). Options: `channel` (`sms` default, `whatsapp`, `email`, `auto`), `language` (`he` default, `ar`, `ru`, `en`), `length` (4 to 8).
+Do not generate, store or compare codes yourself: Otipi does it (5 attempts, 5 minutes by default, `ttlMinutes` 1 to 30). Options: `channel` (`sms` default, or `email`), `language` (`he` default, `ar`, `ru`, `en`), `length` (4 to 8).
 
 Phone numbers must be Israeli mobiles in E.164, `+9725XXXXXXXX`. Users type `050-123-4567`, so always normalize on the server:
 
@@ -60,7 +60,7 @@ Supabase makes and checks the code; Otipi only delivers it through the Supabase 
 - `sk_test_` keys are free. Messages to strangers are only logged, never delivered, and `otp.send` returns `test_code` so the flow can be tested end to end.
 - To receive real SMS during development, the user confirms their own number once: dashboard **API keys > Your numbers for tests**, or `otipi.testRecipients.add({ to })` then `otipi.testRecipients.verify({ to, code })`. 5 free test SMS per account.
 - Message answers carry `test_delivery: "real" | "sandbox"`. If the user says "no SMS arrived" with a test key, the number is probably not confirmed.
-- `sk_live_` keys send to anyone and need an active subscription; live SMS also needs a one-time ID check and an approved sender name in the dashboard.
+- `sk_live_` keys send to anyone and need an active monthly subscription (SMS from 49 ILS for 500, email from 59 ILS for 10,000, packs of both; see https://otipi.co.il/#pricing). Live SMS also needs a one-time ID check and an approved sender name in the dashboard.
 
 ## Errors
 
@@ -72,6 +72,8 @@ Every failure throws `OtipiError` with `.status` and a stable `.code`. Handle at
 | `too_many_codes` | 5 codes an hour to one number | 429, ask to wait |
 | `rate_limited` | too many requests | 429, retry later |
 | `free_test_sms_used` | free test SMS used up | tell the developer to subscribe / use live key |
+| `subscription_required` | live key without an active subscription | 402, subscribe in the dashboard (Plan and usage) |
+| `monthly_limit_reached` | the month's allowance is used up | 429, move to a bigger level |
 | `unauthorized` | bad or missing key | check `OTIPI_KEY` |
 
 Never show `test_code` or the raw key to end users. Do not log codes.

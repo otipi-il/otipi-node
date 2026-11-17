@@ -66,6 +66,8 @@ try {
 | `too_many_codes` | 5 codes an hour to one number | Ask the user to wait |
 | `rate_limited` | Too many requests | Retry after `Retry-After` |
 | `free_test_sms_used` | The 5 free test SMS are used | Subscribe, use a `sk_live_` key |
+| `subscription_required` | A `sk_live_` key without an active subscription | Subscribe in the dashboard: SMS from 49 ILS for 500, email from 59 ILS for 10,000 |
+| `monthly_limit_reached` | This month's allowance is used up (10% grace included) | Move to a bigger level |
 | `identity_not_verified`, `sender_required` | Live SMS needs a one-time ID check and an approved sender name | Dashboard > **SMS** |
 | `domain_not_verified` | Live email from an unverified domain | Dashboard > **Domains** |
 
@@ -76,7 +78,7 @@ try {
 ```js
 const otipi = new Otipi(apiKey, { baseUrl?, timeoutMs? });
 
-otipi.otp.send({ to, app, channel?, language?, length?, ttlMinutes? }); // channel: sms (default) | whatsapp | email | auto
+otipi.otp.send({ to, app, channel?, language?, length?, ttlMinutes? }); // channel: sms (default) | email
 otipi.otp.verify({ to, code });
 
 otipi.send({ channel: 'sms', to, text });                              // any SMS

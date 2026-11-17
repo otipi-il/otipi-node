@@ -1,5 +1,6 @@
-export type OtipiChannel = 'email' | 'sms' | 'whatsapp';
-export type OtipiOtpChannel = 'sms' | 'whatsapp' | 'email' | 'auto';
+export type OtipiChannel = 'email' | 'sms';
+/** "auto" is kept for older code and means "sms". */
+export type OtipiOtpChannel = 'sms' | 'email' | 'auto';
 export type OtipiLanguage = 'he' | 'ar' | 'ru' | 'en';
 export type OtipiMode = 'test' | 'live';
 export type OtipiMessageStatus = 'queued' | 'sent' | 'delivered' | 'opened' | 'failed' | 'bounced';
@@ -86,7 +87,7 @@ export interface OtipiOtpSendInput {
   to: string;
   /** Application or brand name shown in the OTP message (up to 40 chars). */
   app: string;
-  /** Delivery channel: "sms" (default), "whatsapp", "email", or "auto" (WhatsApp first with automatic SMS fallback). */
+  /** Delivery channel: "sms" (default) or "email". */
   channel?: OtipiOtpChannel;
   /** Message language: "he" (default), "ar", "ru", or "en". */
   language?: OtipiLanguage;

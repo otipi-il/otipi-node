@@ -75,7 +75,7 @@ export class Otipi {
     /** Login codes: Otipi makes the code, keeps it and counts the attempts. */
     this.otp = {
       /**
-       * Sends a code. { to, app } are required; channel is "sms" unless you say otherwise ("sms" | "whatsapp" | "email" | "auto").
+       * Sends a code. { to, app } are required; channel is "sms" unless you say otherwise ("sms" | "email").
        * language picks the words of the message: "he" (the default), "ar", "ru" or "en".
        */
       send: ({ ttlMinutes, ...rest } = {}) =>

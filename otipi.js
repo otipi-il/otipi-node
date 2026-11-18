@@ -2,7 +2,7 @@
 //
 //   import { Otipi } from 'otipi';
 //   const otipi = new Otipi(process.env.OTIPI_KEY);
-//   await otipi.otp.send({ to: '+972501234567', app: 'MyApp', channel: 'auto' });
+//   await otipi.otp.send({ to: '+972501234567', app: 'MyApp' });
 //
 // Server side only: the key is a secret and must never reach a browser or a phone app.
 
@@ -90,7 +90,7 @@ export class Otipi {
      * (5 free test SMS per account). add() sends the code, verify() checks it.
      */
     this.testRecipients = {
-      /** { data: [{ id, channel, to, status: 'pending' | 'confirmed' }], free_sms: { total, used, left } } */
+      /** { data: [{ channel, to, status: 'pending' | 'confirmed' }], free_sms: { total, used, left }, real_delivery: { sms, email } } */
       list: () => this.#call('GET', '/v1/test-recipients'),
       /** Sends a 6-digit code to your Israeli mobile number (+9725XXXXXXXX) or email. */
       add: ({ to, language } = {}) => this.#call('POST', '/v1/test-recipients', { body: { to, ...(language ? { language } : {}) } }),

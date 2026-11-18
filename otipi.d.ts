@@ -123,19 +123,20 @@ export interface OtipiOtpVerifyResult {
 }
 
 export interface OtipiTestRecipient {
-  id: string;
   channel: 'sms' | 'email';
   to: string;
   status: 'pending' | 'confirmed';
   /** Present in the answer to add(): false when the recipient was already confirmed. */
   code_sent?: boolean;
-  created_at: string;
-  confirmed_at: string | null;
 }
 
 export interface OtipiTestRecipientList {
+  /** Your confirmed phone (and one waiting for its code), and the email of the account. */
   data: OtipiTestRecipient[];
+  /** Real test SMS to your own confirmed phone: 5 for the life of the account. */
   free_sms: { total: number; used: number; left: number };
+  /** False while a channel is not connected on the service yet: then test messages of it stay in the sandbox. */
+  real_delivery?: { sms: boolean; email: boolean };
 }
 
 export interface OtipiVerifyWebhookOptions {

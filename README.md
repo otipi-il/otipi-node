@@ -1,4 +1,8 @@
+<a href="https://otipi.co.il"><img src=".github/otipi-logo.png" alt="Otipi" width="64" height="64"></a>
+
 # otipi: SMS login codes, SMS and email for Israeli apps
+
+[![npm](https://img.shields.io/npm/v/otipi?color=f0481c&label=npm)](https://www.npmjs.com/package/otipi) [![License: MIT](https://img.shields.io/badge/license-MIT-15120f)](LICENSE) [![Website](https://img.shields.io/badge/otipi.co.il-15120f)](https://otipi.co.il)
 
 Official Node.js SDK for [Otipi](https://otipi.co.il), the SMS and email API for Israel (`+972`). Zero dependencies, TypeScript types included, Node 18+. Message templates in Hebrew, Arabic, Russian and English. Free test mode, no card.
 

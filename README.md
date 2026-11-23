@@ -108,8 +108,8 @@ Supabase Auth sends its phone codes (Send SMS Hook) and all its auth emails (Sen
 
 ## Examples
 
-- [`examples/nextjs-sms-login`](examples/nextjs-sms-login): Next.js App Router, two API routes and a login page. [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fplanetebatel-cloud%2Fotipi-node%2Ftree%2Fmain%2Fexamples%2Fnextjs-sms-login&env=OTIPI_KEY&envDescription=Free%20Otipi%20test%20key%20(sk_test_...)&envLink=https%3A%2F%2Fotipi.co.il%2Fsignup&project-name=otipi-sms-login)
-- [`examples/nextjs-supabase-phone-login`](examples/nextjs-supabase-phone-login): Next.js with Supabase Auth and the Otipi hook. [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fplanetebatel-cloud%2Fotipi-node%2Ftree%2Fmain%2Fexamples%2Fnextjs-supabase-phone-login&env=NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY&envDescription=Your%20Supabase%20project%20URL%20and%20anon%20key%20(Settings%20%3E%20API)&envLink=https%3A%2F%2Fsupabase.com%2Fdashboard&project-name=otipi-supabase-login)
+- [`examples/nextjs-sms-login`](examples/nextjs-sms-login): Next.js App Router, two API routes and a login page. [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fotipi-il%2Fotipi-node%2Ftree%2Fmain%2Fexamples%2Fnextjs-sms-login&env=OTIPI_KEY&envDescription=Free%20Otipi%20test%20key%20(sk_test_...)&envLink=https%3A%2F%2Fotipi.co.il%2Fsignup&project-name=otipi-sms-login)
+- [`examples/nextjs-supabase-phone-login`](examples/nextjs-supabase-phone-login): Next.js with Supabase Auth and the Otipi hook. [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fotipi-il%2Fotipi-node%2Ftree%2Fmain%2Fexamples%2Fnextjs-supabase-phone-login&env=NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY&envDescription=Your%20Supabase%20project%20URL%20and%20anon%20key%20(Settings%20%3E%20API)&envLink=https%3A%2F%2Fsupabase.com%2Fdashboard&project-name=otipi-supabase-login)
 - [`examples/express`](examples/express): Express, two routes.
 
 ## For AI coding agents
@@ -118,7 +118,7 @@ A free test key comes in one click after sign-up: https://otipi.co.il/signup. Th
 
 - **Claude Code plugin** (skill with the rules + MCP server; asks for the key on install):
   ```bash
-  claude plugin marketplace add planetebatel-cloud/otipi-node
+  claude plugin marketplace add otipi-il/otipi-node
   claude plugin install otipi@otipi
   ```
 - **Remote MCP server**, nothing to install: `https://otipi.co.il/mcp`.
@@ -134,17 +134,17 @@ A free test key comes in one click after sign-up: https://otipi.co.il/signup. Th
   - The dashboard has "Add to Cursor" and "Install in VS Code" buttons with your key in them. A local stdio server is on npm: `npx -y otipi-mcp`.
 - **Skill alone** (Claude Code):
   ```bash
-  mkdir -p .claude/skills/otipi && curl -fsSL https://raw.githubusercontent.com/planetebatel-cloud/otipi-node/main/agents/claude-code/skills/otipi/SKILL.md -o .claude/skills/otipi/SKILL.md
+  mkdir -p .claude/skills/otipi && curl -fsSL https://raw.githubusercontent.com/otipi-il/otipi-node/main/agents/claude-code/skills/otipi/SKILL.md -o .claude/skills/otipi/SKILL.md
   ```
 - **Cursor rules**:
   ```bash
-  mkdir -p .cursor/rules && curl -fsSL https://raw.githubusercontent.com/planetebatel-cloud/otipi-node/main/agents/cursor/otipi.mdc -o .cursor/rules/otipi.mdc
+  mkdir -p .cursor/rules && curl -fsSL https://raw.githubusercontent.com/otipi-il/otipi-node/main/agents/cursor/otipi.mdc -o .cursor/rules/otipi.mdc
   ```
 - Docs as plain text: [otipi.co.il/llms.txt](https://otipi.co.il/llms.txt) · [llms-full.txt](https://otipi.co.il/llms-full.txt) · OpenAPI: [otipi.co.il/openapi.json](https://otipi.co.il/openapi.json) · Up-to-date docs in your agent: [Context7](https://context7.com)
 
 ## Links
 
-[Documentation](https://otipi.co.il/en/docs) · [Dashboard](https://otipi.co.il/app) · [MCP server](https://github.com/planetebatel-cloud/otipi-mcp)
+[Documentation](https://otipi.co.il/en/docs) · [Dashboard](https://otipi.co.il/app) · [MCP server](https://github.com/otipi-il/otipi-mcp)
 
 ## License
 

@@ -1,13 +1,13 @@
 {
   "name": "otipi",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "SMS login (OTP), SMS and email for Israeli (+972) users with the Otipi API: a skill with the rules and the Otipi MCP server for test codes.",
   "author": {
     "name": "Otipi",
     "url": "https://otipi.co.il"
   },
   "homepage": "https://otipi.co.il",
-  "repository": "https://github.com/planetebatel-cloud/otipi-node",
+  "repository": "https://github.com/otipi-il/otipi-node",
   "license": "MIT",
   "keywords": [
     "sms",

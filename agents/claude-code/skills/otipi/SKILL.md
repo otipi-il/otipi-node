@@ -43,7 +43,7 @@ function toIsraeliMobile(input: unknown): string | null {
 - `app/api/otp/verify/route.ts`: `otipi.otp.verify`, then create the session.
 - A `'use client'` page with a phone step and a code step that calls those routes with `fetch`. Inputs: `type="tel" dir="ltr"`, code `inputMode="numeric" autoComplete="one-time-code"`.
 
-Full example: https://github.com/planetebatel-cloud/otipi-node/tree/main/examples/nextjs-sms-login
+Full example: https://github.com/otipi-il/otipi-node/tree/main/examples/nextjs-sms-login
 
 ## Supabase phone auth
 

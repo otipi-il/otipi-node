@@ -1,7 +1,7 @@
 'use client';
 
 // Supabase phone login for Israeli numbers. Supabase makes and checks the code;
-// the Otipi Send SMS Hook (https://github.com/planetebatel-cloud/otipi-supabase)
+// the Otipi Send SMS Hook (https://github.com/otipi-il/otipi-supabase)
 // delivers it. No Otipi key here: it lives in the edge function secrets.
 import { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';

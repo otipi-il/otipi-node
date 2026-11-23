@@ -1,6 +1,6 @@
 {
   "name": "otipi",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Official Node.js SDK for Otipi: SMS, email and OTP login codes for Israeli apps (+972), with a free test mode.",
   "type": "module",
   "main": "./otipi.js",
@@ -38,10 +38,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/planetebatel-cloud/otipi-node.git"
+    "url": "git+https://github.com/otipi-il/otipi-node.git"
   },
   "homepage": "https://otipi.co.il",
   "bugs": {
-    "url": "https://github.com/planetebatel-cloud/otipi-node/issues"
+    "url": "https://github.com/otipi-il/otipi-node/issues"
   }
 }

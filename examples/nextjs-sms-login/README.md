@@ -2,7 +2,7 @@
 
 Two API routes and one page: the user types `050-123-4567`, gets an SMS code from Otipi, types it, and is signed in.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fplanetebatel-cloud%2Fotipi-node%2Ftree%2Fmain%2Fexamples%2Fnextjs-sms-login&env=OTIPI_KEY&envDescription=Free%20Otipi%20test%20key%20(sk_test_...)&envLink=https%3A%2F%2Fotipi.co.il%2Fsignup&project-name=otipi-sms-login)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fotipi-il%2Fotipi-node%2Ftree%2Fmain%2Fexamples%2Fnextjs-sms-login&env=OTIPI_KEY&envDescription=Free%20Otipi%20test%20key%20(sk_test_...)&envLink=https%3A%2F%2Fotipi.co.il%2Fsignup&project-name=otipi-sms-login)
 
 One click: Vercel copies this example to your GitHub and asks for `OTIPI_KEY` (a free test key from https://otipi.co.il/signup). Open `/login` on the new site.
 

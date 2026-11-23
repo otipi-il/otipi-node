@@ -2,7 +2,7 @@
 
 Supabase Auth makes and checks the code. Otipi delivers it as an SMS through the Supabase **Send SMS Hook**.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fplanetebatel-cloud%2Fotipi-node%2Ftree%2Fmain%2Fexamples%2Fnextjs-supabase-phone-login&env=NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY&envDescription=Your%20Supabase%20project%20URL%20and%20anon%20key%20(Settings%20%3E%20API)&envLink=https%3A%2F%2Fsupabase.com%2Fdashboard&project-name=otipi-supabase-login)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fotipi-il%2Fotipi-node%2Ftree%2Fmain%2Fexamples%2Fnextjs-supabase-phone-login&env=NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY&envDescription=Your%20Supabase%20project%20URL%20and%20anon%20key%20(Settings%20%3E%20API)&envLink=https%3A%2F%2Fsupabase.com%2Fdashboard&project-name=otipi-supabase-login)
 
 The app deploys in one click with your Supabase URL and anon key. The SMS hook is set up once (step 1 below), with no code.
 
